@@ -5,10 +5,10 @@ const jwt = require("jsonwebtoken");
 const Users = require("../../models/User");
 
 router.post("/register", (req, res) => {
-    const { username, email, password, role } = req.body;
+    const {  email, password, role  , firstname , lastname ,phone } = req.body;
     console.log(req.body)
 
-    if (!username || !email || !password) {
+    if (!email || !password || !firstname || !lastname || !phone) {
         return res.status(400).send({ status: "notok", msg: "Please enter all required data" });
     }
 
@@ -19,10 +19,14 @@ router.post("/register", (req, res) => {
             }
 
             const newUser = new Users({
-                username,
+
                 email,
                 password,
-                role
+                role,
+                firstname,
+                lastname,
+                phone
+
             });
 
             bcrypt.genSalt(10, (err, salt) => {
@@ -91,7 +95,7 @@ router.post("/login-user", (req, res) => {
                         console.error(err);
                         return res.status(500).json({ error: "Internal server error" });
                     }
-                    return res.status(200).json({ token });
+                    return res.status(200).json({ token }) , this.email;
                 }
             );
         }).catch((err) => {
@@ -100,5 +104,123 @@ router.post("/login-user", (req, res) => {
         });
     });
 });
+
+// Lire tous les utilisateurs (READ)
+
+router.get('/all', async (req, res) => {
+
+    try {
+
+        const users = await Users.find();
+        res.status(200).json(users);
+
+    } catch (error) {
+
+        res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs', error });
+
+    }
+
+});
+
+
+
+// Lire un utilisateur par ID (READ)
+
+router.get('/:id', async (req, res) => {
+
+    const { id } = req.params;
+
+
+
+    try {
+
+        const user = await Users.findById(id);
+
+        if (!user) {
+
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+
+        }
+
+        res.status(200).json(user);
+
+    } catch (error) {
+
+        res.status(500).json({ message: 'Erreur lors de la récupération de l\'utilisateur', error });
+
+    }
+
+});
+
+
+
+// Mettre à jour un utilisateur par ID (UPDATE)
+
+router.put('/:id', async (req, res) => {
+
+    const { id } = req.params;
+
+    const {  email, password, role , lastname , firstname , phone} = req.body;
+
+
+
+    try {
+
+        const updatedUser = await Users.findByIdAndUpdate(
+
+            id,
+
+            {  email, password, role , lastname , firstname , phone},
+
+            { new: true }
+
+        );
+
+        if (!updatedUser) {
+
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+
+        }
+
+        res.status(200).json({ message: 'Utilisateur mis à jour avec succès', updatedUser });
+
+    } catch (error) {
+
+        res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'utilisateur', error });
+
+    }
+
+});
+
+
+
+// Supprimer un utilisateur par ID (DELETE)
+
+router.delete('/:id', async (req, res) => {
+
+    const { id } = req.params;
+
+
+
+    try {
+
+        const deletedUser = await Users.findByIdAndDelete(id);
+
+        if (!deletedUser) {
+
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+
+        }
+
+        res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+
+    } catch (error) {
+
+        res.status(500).json({ message: 'Erreur lors de la suppression de l\'utilisateur', error });
+
+    }
+
+});
+
 
 module.exports = router;

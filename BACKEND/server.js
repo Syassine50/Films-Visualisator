@@ -4,6 +4,8 @@ const config = require("config");
 const cors = require("cors")
 const app = express();
 const UserRouter =require('./routes/api/users')
+const filmRouter=require ('./routes/api/films')
+
 
 app.use(express.json());
 app.use(cors());
@@ -16,9 +18,8 @@ mongoose
     .catch((err) => console.log(err));
 
 app.use('/api/users', UserRouter)
-
+app.use('/api/films' , filmRouter)
 const port =process.env.PORT || 3001 ;
-
 
 
 
