@@ -24,7 +24,6 @@ import {ToolBarComponent} from './CompGit/tool-bar/tool-bar.component';
 import {ButtonComponent} from './CompGit/button/button.component';
 import {MovieTileComponent} from './CompGit/movie-tile/movie-tile.component';
 import {AddMovieComponent} from './CompGit/add-movie/add-movie.component';
-import { AbonnementAddComponent } from './abonnement-add/abonnement-add.component';
 import { AddAbonnComponent } from './AbonnementMangaement/add-abonn/add-abonn.component';
 import { UpdateAbnnComponent } from './AbonnementMangaement/update-abnn/update-abnn.component';
 import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnements/show-abonnements.component';
@@ -50,7 +49,6 @@ import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnement
     ButtonComponent,
     MovieTileComponent,
     AddMovieComponent,
-    AbonnementAddComponent,
     AddAbonnComponent,
     UpdateAbnnComponent,
     ShowAbonnementsComponent

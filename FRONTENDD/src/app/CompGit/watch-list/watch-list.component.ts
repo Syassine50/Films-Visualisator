@@ -12,7 +12,7 @@ export class WatchListComponent implements OnInit, OnDestroy {
   films: Films[] = [];
   isModalOpen = false;
   currentVideo: string = '';
-  @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef<HTMLVideoElement>;
+  // @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef<HTMLVideoElement>;
 
   constructor(
     private filmService: FilmsService,
@@ -42,30 +42,6 @@ export class WatchListComponent implements OnInit, OnDestroy {
     return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
   }
 
-  playVideo(videoPath: string): void {
-    console.log('Playing video:', videoPath);
-    this.currentVideo = videoPath;
-    this.isModalOpen = true;
-    document.body.classList.add('modal-open');
-
-    setTimeout(() => {
-      if (this.videoPlayer) {
-        this.videoPlayer.nativeElement.load();
-        this.videoPlayer.nativeElement.play().catch(err => {
-          console.error('Error playing video:', err);
-        });
-      }
-    }, 100);
-  }
-
-  closeModal(): void {
-    this.isModalOpen = false;
-    document.body.classList.remove('modal-open');
-    if (this.videoPlayer) {
-      this.videoPlayer.nativeElement.pause();
-      this.videoPlayer.nativeElement.currentTime = 0;
-    }
-  }
 
   ngOnDestroy(): void {
     document.body.classList.remove('modal-open');
