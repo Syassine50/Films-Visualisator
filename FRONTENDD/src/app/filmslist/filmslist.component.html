@@ -1,0 +1,55 @@
+<div class="container">
+  <div *ngIf="films.length > 0; else noFilms">
+    <div class="row">
+      <div *ngFor="let film of films" class="col-md-4 mb-4">
+        <div class="card">
+          <img [src]="'http://localhost:3001/' + film.photoAffiche"
+               class="card-img-top"
+               style="height: 300px; object-fit: cover;"
+               [alt]="film.nom">
+
+          <div class="card-body">
+            <h5 class="card-title">{{film.nom}}</h5>
+            <p class="card-text">{{film.description}}</p>
+            <div class="d-flex justify-content-between">
+              <button class="btn btn-primary" (click)="playVideo(film.trailer)">
+                Watch Trailer
+              </button>
+              <button class="btn btn-success" (click)="playVideo(film.film)">
+                Watch Film
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal fade" id="videoModal" tabindex="-1" [ngClass]="{'show': isModalOpen}"
+       [style.display]="isModalOpen ? 'block' : 'none'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Video Player</h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <video #videoPlayer class="w-100" controls autoplay>
+            <source [src]="getVideoUrl(currentVideo)" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div class="modal-backdrop fade show" *ngIf="isModalOpen" (click)="closeModal()"></div>
+
+  <ng-template #noFilms>
+    <div class="alert alert-warning text-center" role="alert">
+      No films found.
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,86 @@
+<div class="container mt-5">
+   <div class="row justify-content-center">
+    <div class="col-md-6">
+
+     <div class="card">
+
+      <div class="card-header">
+
+       Inscription
+
+      </div>
+
+      <div class="card-body">
+
+       <form (ngSubmit)="register()" #registerForm="ngForm">
+         <div class="form-group p-2">
+
+           <label for="firstname">First name:</label>
+
+           <input type="text" class="form-control" id="firstname" name="firstname" [(ngModel)]="user.firstname" required>
+
+         </div>
+
+
+         <div class="form-group p-2">
+
+           <label for="lastname">Last Name:</label>
+
+           <input type="text" class="form-control" id="lastname" name="lastname" [(ngModel)]="user.lastname" required>
+
+         </div>
+
+         <div class="form-group p-2">
+
+           <label for="phone">Phone :</label>
+
+           <input type="text" class="form-control" id="phone" name="phone" [(ngModel)]="user.phone" required>
+
+         </div>
+
+
+
+
+           <div class="form-group p-2">
+
+           <label for="email">Email:</label>
+
+           <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email" required>
+
+          </div>
+
+          <div class="form-group p-2">
+
+           <label for="password">Mot de passe:</label>
+
+           <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password" required>
+
+          </div>
+
+          <div class="form-group p-2">
+            <label for="role">Rôle</label>
+            <select id="role" class="form-control" name="role" [(ngModel)]="user.role">
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+              <option value="moderator">Moderator</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" >S'inscrire</button>
+
+       </form>
+
+
+
+      </div>
+
+     </div>
+
+    </div>
+
+ </div>
+
+</div>
+
+
+

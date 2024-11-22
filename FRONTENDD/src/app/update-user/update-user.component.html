@@ -1,0 +1,75 @@
+<div class="container mt-4">
+  <h3 class="text-center">Mettre à jour l'utilisateur</h3>
+
+  <form [formGroup]="updateUserForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="firstname">First name :</label>
+      <input
+        id="firstname"
+        class="form-control"
+        formControlName="firstname"
+        placeholder="Nom d'utilisateur"
+      />
+      <div *ngIf="updateUserForm.get('firstname')?.invalid && updateUserForm.get('firstname')?.touched" class="text-danger">
+        first name est requis
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastname">Last name :</label>
+      <input
+        id="lastname"
+        class="form-control"
+        formControlName="lastname"
+        placeholder="lastname"
+      />
+      <div *ngIf="updateUserForm.get('lastname')?.invalid && updateUserForm.get('lastname')?.touched" class="text-danger">
+        last name est requis
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="phone">phone :</label>
+      <input
+        id="phone"
+        class="form-control"
+        formControlName="phone"
+        placeholder="phone"
+      />
+      <div *ngIf="updateUserForm.get('phone')?.invalid && updateUserForm.get('phone')?.touched" class="text-danger">
+        phone est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="Email"
+        type="email"
+      />
+      <div *ngIf="updateUserForm.get('email')?.invalid && updateUserForm.get('email')?.touched" class="text-danger">
+        Un email valide est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Rôle</label>
+      <select id="role" class="form-control" formControlName="role">
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+        <option value="moderator">Moderator</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3" [disabled]="loading">
+      {{ loading ? 'Mise à jour...' : 'Mettre à jour' }}
+    </button>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+
+  </form>
+</div>
