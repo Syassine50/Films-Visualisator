@@ -5,8 +5,11 @@ const cors = require("cors")
 const app = express();
 const UserRouter =require('./routes/api/users')
 const filmRouter=require ('./routes/api/films')
-
-
+const AbonnRouter=require ('./routes/api/abonnements')
+const CategorieRouter = require('./routes/api/categories')
+const PayementRouter=require('./routes/api/payaments')
+const path = require("path");
+const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
@@ -17,17 +20,18 @@ mongoose
     .then(()=> console.log("MongoDB connected ..."))
     .catch((err) => console.log(err));
 
-app.use('/api/users', UserRouter)
-app.use('/api/films' , filmRouter)
-const port =process.env.PORT || 3001 ;
+app.use('/api/users', UserRouter);
+app.use('/api/films', filmRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.mp4')) {
+            res.set('Content-Type', 'video/mp4');
+        }
+    }
 
-
-
-
-
-const subscribersRouter = require('./routes/subscribers')
-app.use('/subscribers', subscribersRouter)
-
-
+}));
+app.use('/api/categorie', CategorieRouter);
+app.use('/api/abonnement', AbonnRouter);
+app.use('/api/payment' , PayementRouter);
 
 app.listen(port ,  () => console.log(`Server running on port ${port}`));

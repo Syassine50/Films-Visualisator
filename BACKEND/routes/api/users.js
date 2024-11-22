@@ -8,7 +8,7 @@ router.post("/register", (req, res) => {
     const {  email, password, role  , firstname , lastname ,phone } = req.body;
     console.log(req.body)
 
-    if (!email || !password || !firstname || !lastname || !phone) {
+    if (!email || !password || !firstname || !lastname || !phone  ) {
         return res.status(400).send({ status: "notok", msg: "Please enter all required data" });
     }
 
@@ -25,7 +25,7 @@ router.post("/register", (req, res) => {
                 role,
                 firstname,
                 lastname,
-                phone
+                phone,
 
             });
 
@@ -69,6 +69,9 @@ router.post("/register", (req, res) => {
 // @route     post
 // @desc      Login user
 // @access    Public
+// @route   POST
+// @desc    Login user
+// @access  Public
 router.post("/login-user", (req, res) => {
     const { email, password } = req.body;
 
@@ -86,8 +89,9 @@ router.post("/login-user", (req, res) => {
                 return res.status(401).json({ error: "Incorrect password" });
             }
 
+            // Ajoutez ici le rôle de l'utilisateur à la réponse
             jwt.sign(
-                { id: user.id },
+                {id: user.id, role: user.role}, // Incluez le rôle dans le payload du token sinécessaire
                 config.get("jwtSecret"),
                 { expiresIn: config.get("tokenExpire") },
                 (err, token) => {
@@ -95,15 +99,18 @@ router.post("/login-user", (req, res) => {
                         console.error(err);
                         return res.status(500).json({ error: "Internal server error" });
                     }
-                    return res.status(200).json({ token }) , this.email;
+
+                    // Retournez le token et le rôle dans la réponse
+                    return res.status(200).json({token, role: user.role});
                 }
             );
-        }).catch((err) => {
-            console.error(err);
-            return res.status(500).json({ error: "Internal server error" });
         });
+    }).catch((err) => {
+        console.error(err);
+        return res.status(500).json({error: "Internal server error"});
     });
 });
+
 
 // Lire tous les utilisateurs (READ)
 

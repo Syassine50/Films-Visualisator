@@ -25,6 +25,10 @@ const filmSchema = new mongoose.Schema({
     film: {
         type: String, // URL du film complet (ou un chemin vers un fichier)
         required: true,
+    },
+    categorie:{
+        type:[String],
+        required:true,
     }
 });
 
