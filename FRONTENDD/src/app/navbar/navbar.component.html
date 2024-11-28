@@ -1,40 +1,10 @@
-<!--<nav class="navbar navbar-expand-lg navbar-light bg-light" >-->
-<!--  <a class="navbar-brand" href="#">-->
-<!--    <img src="./assets/netflix-vector-flat-logo-735811696261671nhzlvgcmyf.png" width="50" height="50" class="d-inline-block align-content-center" alt="sdqdsq">-->
-<!--    Bootstrap-->
-<!--  </a>-->
-<!--  <div class="collapse navbar-collapse" id="navbarNav">-->
-<!--    <ul class="navbar-nav">-->
-<!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href="#">Features</a>-->
-<!--      </li>-->
-<!--      <li class="nav-item">-->
-<!--        <a class="nav-link" href="#">Pricing</a>-->
-<!--      </li>-->
-<!--      <li class="nav-item">-->
-<!--        <a class="nav-link " href="#">Disabled</a>-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--  </div>-->
-<!--  <div class="m-lg-auto"> &lt;!&ndash; Show Username if Logged In &ndash;&gt;-->
-<!--    <ng-container *ngIf="isLoggedIn; else showButtons">-->
-
-<!--    </ng-container>-->
-<!--    &lt;!&ndash; Show Login and Inscription Buttons if not logged in &ndash;&gt;-->
-<!--    <ng-template #showButtons>-->
-<!--      <button class="btn btn-outline-primary me-2" [routerLink]="['/login-user']">Login</button>-->
-<!--      <button class="btn btn-outline-success me-2" [routerLink]="['/register']">Inscription</button>-->
-<!--    </ng-template>-->
-<!--  </div>-->
-<!--</nav>-->
 <div class="bar bg-light">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light">
-      <a class="navbar-brand " routerLink="">
-        <img src="./assets/netflix-vector-flat-logo-735811696261671nhzlvgcmyf.png" width="70" height="70" class="d-inline-block align-content-center" alt="sdqdsq">
+      <a class="navbar-brand" routerLink="">
+        <img src="./assets/netflix-vector-flat-logo-735811696261671nhzlvgcmyf.png" width="70" height="70" class="d-inline-block align-content-center" alt="Logo">
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs
-              target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -48,9 +18,30 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/contact">Contact</a>
           </li>
+
+          <!-- Boutons de connexion/inscription si non connecté -->
+          <ng-container *ngIf="!(isLoggedIn$ | async)">
+            <li class="nav-item">
+              <a class="btn btn-outline-primary me-2" routerLink="/login-user">Connexion</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-success me-2" routerLink="/register">Inscription</a>
+            </li>
+          </ng-container>
+
+          <!-- Dropdown utilisateur si connecté -->
+          <ng-container *ngIf="isLoggedIn$ | async">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ fullname$ | async }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><button class="dropdown-item btn btn-danger" (click)="logout()">Déconnexion</button></li>
+              </ul>
+            </li>
+          </ng-container>
         </ul>
       </div>
     </nav>
   </div>
 </div>
-

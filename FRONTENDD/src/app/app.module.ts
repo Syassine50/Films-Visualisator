@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-//import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieService } from 'ngx-cookie-service';
@@ -27,6 +27,7 @@ import {AddMovieComponent} from './CompGit/add-movie/add-movie.component';
 import { AddAbonnComponent } from './AbonnementMangaement/add-abonn/add-abonn.component';
 import { UpdateAbnnComponent } from './AbonnementMangaement/update-abnn/update-abnn.component';
 import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnements/show-abonnements.component';
+import { PaiementComponent } from './PaiementComponents/paiement/paiement.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnement
     HomeComponent,
     NavbarComponent,
 
+
     //commppp
 
 
@@ -51,7 +53,8 @@ import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnement
     AddMovieComponent,
     AddAbonnComponent,
     UpdateAbnnComponent,
-    ShowAbonnementsComponent
+    ShowAbonnementsComponent,
+    PaiementComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +63,8 @@ import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnement
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    MatTabsModule
+    MatTabsModule,
+    NgbModule
   ],
   providers: [
 

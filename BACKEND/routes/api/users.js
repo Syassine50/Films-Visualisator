@@ -91,7 +91,7 @@ router.post("/login-user", (req, res) => {
 
             // Ajoutez ici le rôle de l'utilisateur à la réponse
             jwt.sign(
-                {id: user.id, role: user.role}, // Incluez le rôle dans le payload du token sinécessaire
+                {id: user.id, role: user.role , id : user._id , email : user.email ,fullname : user.lastname+" "+user.firstname}, // Incluez le rôle dans le payload du token sinécessaire
                 config.get("jwtSecret"),
                 { expiresIn: config.get("tokenExpire") },
                 (err, token) => {
@@ -101,7 +101,7 @@ router.post("/login-user", (req, res) => {
                     }
 
                     // Retournez le token et le rôle dans la réponse
-                    return res.status(200).json({token, role: user.role});
+                    return res.status(200).json({token, role: user.role ,  id : user._id , email : user.email ,fullname : user.lastname+" "+user.firstname });
                 }
             );
         });

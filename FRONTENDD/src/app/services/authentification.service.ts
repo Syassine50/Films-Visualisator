@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-import {Observable, tap, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, tap, throwError} from 'rxjs';
 
 import { catchError } from 'rxjs/operators';
 
@@ -20,10 +20,20 @@ import {CookieService} from 'ngx-cookie-service';
 export class AuthentificationService {
   private apiUrl = 'http://localhost:3001/api/users';
 
+  private loggedIn = new BehaviorSubject<boolean>(false);
+  private fullname = new BehaviorSubject<string>('');
+
+
 
 
   constructor(private http: HttpClient ,
-              private cookieService: CookieService) { }
+              private cookieService: CookieService) {
+    const token = this.cookieService.get('token');
+    this.loggedIn.next(!!token);
+
+    if (token) {
+      this.fullname.next(this.cookieService.get('fullname'));
+    }}
 
 
 
@@ -41,6 +51,22 @@ export class AuthentificationService {
 
 
 
+  }
+
+  // Observable pour le statut de connexion
+  isLoggedIn$ = this.loggedIn.asObservable();
+  fullname$ = this.fullname.asObservable();
+
+  // Méthode pour mettre à jour le statut de connexion
+  login(fullname: string) {
+    this.loggedIn.next(true);
+    this.fullname.next(fullname);
+  }
+
+  // Méthode de déconnexion
+  logout() {
+    this.loggedIn.next(false);
+    this.fullname.next('');
   }
 
   loginUser(email: string, password: string): Observable<any> {

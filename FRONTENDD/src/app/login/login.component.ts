@@ -25,15 +25,17 @@ export class LoginComponent {
 
         const token = response.token; // Assurez-vous que le token est correctement extrait
         const role = response.role; // Vérifiez que vous extrayez le rôle
-
+        const id = response.id; // Vérifiez que vous extrayez le rôle
+        const fullname =response.fullname ;
         if (token) {
           // Stockage sécurisé du cookie
           const cookieExpirationDays = 7;
           this.cookieService.set('token', token, cookieExpirationDays, '/', '', true, 'Strict');
           this.cookieService.set('role', role, cookieExpirationDays, '/', '', true, 'Strict');
-          // this.cookieService.set('role', role, cookieExpirationDays, '/', '', true, 'Strict');
+          this.cookieService.set('id', id, cookieExpirationDays, '/', '', true, 'Strict');
+          this.cookieService.set('fullname', fullname, cookieExpirationDays, '/', '', true, 'Strict');
+          this.userService.login(fullname);
 
-          alert("Bienvenue");
           // Vérifiez le token avant de naviguer
           if (this.userService.isTokenValid(token)) {
             this.router.navigate(['/']);

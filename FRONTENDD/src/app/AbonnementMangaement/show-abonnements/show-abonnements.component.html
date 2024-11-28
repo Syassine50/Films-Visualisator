@@ -1,1 +1,44 @@
-<p>show-abonnements works!</p>
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center pb-5 mb-3">
+      <div class="col-md-7 heading-section text-center ftco-animate fadeInUp ftco-animated">
+        <h2>Affordable Packages</h2>
+      </div>
+      <div class="">
+        <button *ngIf="isAdmin()" class="btn btn-primary me-2" [routerLink]="['/Abonnement/Add']">
+          Ajouter un abonnement
+        </button>
+      </div>
+    </div>
+    <div  class="row">
+      <div *ngFor="let abonn of abonnms" class="col-md-4 ftco-animate fadeInUp ftco-animated">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">{{abonn.name}}</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">DT{{abonn.prix}} </h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Possibilité de visualiser </li>
+              <li>vos films préfere pendant</li>
+              <li>{{abonn.duree}} mois</li>
+              <li>Avec vos amis et votre famille </li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary" [routerLink]="['/Paiement/add/', abonn._id , abonn.duree]" >Sign up</button>
+            <div *ngIf="isAdmin()" class="p-2">
+              <!-- Bouton pour modifier l'utilisateur -->
+              <button class="btn btn-primary me-2" [routerLink]="['/Abonnement/update/', abonn._id]">
+                Modifier
+              </button>
+              <!-- Bouton pour supprimer l'utilisateur -->
+              <button *ngIf="isAdmin()" class="btn btn-danger" (click)="onDeleteAbonn(abonn._id)" >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

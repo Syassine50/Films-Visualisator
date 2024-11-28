@@ -49,9 +49,7 @@ export class RegisterComponent {
 
         console.log(response);
 
-        alert('Inscription réussie:');
-
-        this.router.navigate(['/']);
+        this.router.navigate(['/login-user']);
 
       },
 

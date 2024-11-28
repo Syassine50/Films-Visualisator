@@ -16,19 +16,30 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import { authGuard} from './auth.guard';
 import {WatchListComponent} from './CompGit/watch-list/watch-list.component';
 import {AddMovieComponent} from './CompGit/add-movie/add-movie.component';
+import {ShowAbonnementsComponent} from './AbonnementMangaement/show-abonnements/show-abonnements.component';
+import {AddAbonnComponent} from './AbonnementMangaement/add-abonn/add-abonn.component';
+import {UpdateAbnnComponent} from './AbonnementMangaement/update-abnn/update-abnn.component';
+import {PaiementComponent} from './PaiementComponents/paiement/paiement.component';
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'login-user', component: LoginComponent},
   {path: 'listusers', component: ListusersComponent,canActivate:[authGuard]},
   {path: 'users/update-user/:id', component: UpdateUserComponent,},
-  {path: 'films/all', component: FilmslistComponent,},
+  {path: '', component: FilmslistComponent,},
   {path: 'film/add', component: AddfilmComponent,},
+
   //{path: '', component: HomeComponent ,canActivate:[authGuard]} , // Use HomeComponent instead of AppComponent
 
-//sdfsdfsdfg
-  { path: '', component: WatchListComponent },
-  { path: 'addMovie', component: AddMovieComponent },
+// // //sdfsdfsdfg
+//   { path: '', component: WatchListComponent },
+//   { path: 'addMovie', component: AddMovieComponent },
+
+  {path: 'Abonnement/ListAbonnement' , component:ShowAbonnementsComponent},
+  {path: 'Abonnement/Add' , component:AddAbonnComponent , canActivate:[authGuard]},
+  {path: 'Abonnement/update/:id' , component:UpdateAbnnComponent , canActivate:[authGuard]},
+  {path: 'Paiement/add/:id/:duree' , component:PaiementComponent }
+
 
 ];
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const Payment = require("../../models/Payement");
 
 router.post("/add", (req, res) => {
-    const {utilisateurId, abonnementId, numeroCarte, cvv, nomDePropDeCarte} = req.body;
+    const {utilisateurId, abonnementId, numeroCarte, cvv, nomDePropDeCarte , months} = req.body;
 
     if (!utilisateurId || !abonnementId || !numeroCarte || !cvv || !nomDePropDeCarte) {
         return res.status(400).send({status: "notok", msg: "Please enter all required data"});
@@ -15,7 +15,7 @@ router.post("/add", (req, res) => {
         numeroCarte,
         cvv,
         nomDePropDeCarte,
-        dateExpirationAbon: new Date(new Date().setMonth(new Date().getMonth() + 3)) // Set to 3 months from now
+        dateExpirationAbon: new Date(new Date().setMonth(new Date().getMonth() + months)) // Set to 3 months from now
     });
 
     newPayment.save()

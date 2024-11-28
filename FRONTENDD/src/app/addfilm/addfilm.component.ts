@@ -55,7 +55,6 @@ export class AddfilmComponent {
       formData.forEach((value, key) => {
         console.log(key, value);
       });
-
       this.filmService.addFilm(formData).subscribe({
         next: (response) => {
           console.log('Success:', response);
