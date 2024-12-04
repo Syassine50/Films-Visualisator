@@ -29,11 +29,11 @@ export class FilmsService {
     );
   }
   updateFilm(id: string, formData: FormData) {
-    return this.http.put(`/api/films/${id}`, formData);
+    return this.http.put<any>(`${this.apiUrlFilm}/update/${id}`, formData);
   }
 
   getFilmById(id: string) {
-    return this.http.get(`/api/films/${id}`);
+    return this.http.get<any>(`${this.apiUrlFilm}/${id}`);
   }
   getCategories():Observable<any> {
     return this.http.get<any>(`${this.apiUrlFilmcateg}/all`);

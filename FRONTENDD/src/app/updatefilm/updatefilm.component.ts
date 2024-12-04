@@ -1,113 +1,146 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FilmsService } from '../services/films.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-updatefilm',
   templateUrl: './updatefilm.component.html',
   styleUrl: './updatefilm.component.css'
 })
-export class UpdatefilmComponent implements OnInit {
-  updateFilmForm: FormGroup;
-  filmId: string = '';
-  loading: boolean = false;
-  errorMessage: string = '';
-
-  // File storage
-  trailer: File | null = null;
-  photoAffiche: File | null = null;
-  film: File | null = null;
+export class UpdatefilmComponent  implements OnInit {
+  film: any = {
+    id: null,
+    nom: '',
+    description: '',
+    dateDeSortie: '',
+    trailer: null,
+    photoAffiche: null,
+    film: null
+  };
+  filmId: string | null = '';
+  filmForm:FormGroup ;
+  isLoading = false;
+  errorMessage = '';
+  isUpdateMode = false;
 
   constructor(
-    private route: ActivatedRoute,
     private filmService: FilmsService,
+    private router: Router,
+    private route: ActivatedRoute,
     private fb: FormBuilder,
-    private router: Router
   ) {
-    // Initialize the form with validators
-    this.updateFilmForm = this.fb.group({
+    this.filmForm = this.fb.group({
       nom: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      dateDeSortie: ['', [Validators.required]]
+      // dateDeSortie: ['', [Validators.required]],
+      trailer: null,
+      photoAffiche: null,
+      film: null
     });
   }
 
-  ngOnInit(): void {
-    // Retrieve film ID from URL
-    this.filmId = this.route.snapshot.paramMap.get('id') || '';
-
-    // Load film details to pre-fill the form
+  ngOnInit() {
+    // Check if we're in update mode
+    this.filmId = this.route.snapshot.paramMap.get('id');
     if (this.filmId) {
       this.filmService.getFilmById(this.filmId).subscribe(
-        (film) => {
-          // Pre-fill the form with film data
-          this.updateFilmForm.patchValue({
-            nom: film.nom,
-            description: film.description,
-            dateDeSortie: film.dateDeSortie
+        (Film) => {
+          // Pré-remplir le formulaire avec les données utilisateur
+          this.filmForm.patchValue({
+            nom: Film.nom,
+            description: Film.description,
+            dateDeSortie: Film.dateDeSortie
           });
         },
         (error) => {
-          console.error('Erreur lors de la récupération des informations du film', error);
-          this.errorMessage = 'Impossible de charger les détails du film';
+          console.error('Erreur lors de la récupération des informations utilisateur', error);
         }
       );
     }
   }
+  loadFilmDetails(id: string) {
+    this.isLoading = true;
+    this.filmService.getFilmById(id).subscribe({
+      next: (film) => {
+        this.film = {
+          ...film,
+          trailer: null,
+          photoAffiche: null,
+          film: null
+        };
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading film details:', error);
+        this.errorMessage = "Impossible de charger les détails du film.";
+        this.isLoading = false;
+      }
+    });
+  }
 
-  // Handle file selection
   onFileChange(event: any, type: string) {
     const file = event.target.files[0];
     if (file) {
-      switch(type) {
-        case 'trailer':
-          this.trailer = file;
-          break;
-        case 'photoAffiche':
-          this.photoAffiche = file;
-          break;
-        case 'film':
-          this.film = file;
-          break;
-      }
+      this.film[type] = file;
     }
   }
 
-  // Submit form
-  onSubmit(): void {
-    if (this.updateFilmForm.valid) {
-      this.loading = true;
-
-      // Create FormData for file upload
+  add(form: any) {
+    if (form.valid) {
+      this.isLoading = true;
       const formData = new FormData();
 
-      // Add form values to FormData
-      Object.keys(this.updateFilmForm.controls).forEach(key => {
-        formData.append(key, this.updateFilmForm.get(key)?.value);
-      });
+      // Ajout des données textuelles
+      formData.append('nom', this.film.nom);
+      formData.append('description', this.film.description);
+      formData.append('dateDeSortie', this.film.dateDeSortie);
 
-      // Add files if they exist
-      if (this.trailer) formData.append('trailer', this.trailer);
-      if (this.photoAffiche) formData.append('photoAffiche', this.photoAffiche);
-      if (this.film) formData.append('film', this.film);
+      // Ajout des fichiers (optionnel pour la mise à jour)
+      if (this.film.trailer instanceof File) {
+        formData.append('trailer', this.film.trailer);
+      }
+      if (this.film.photoAffiche instanceof File) {
+        formData.append('photoAffiche', this.film.photoAffiche);
+      }
+      if (this.film.film instanceof File) {
+        formData.append('film', this.film.film);
+      }
 
-      // Add film ID for update
-      formData.append('id', this.filmId);
-
-      // Call update service method
-      this.filmService.updateFilm(this.filmId, formData).subscribe(
-        () => {
-          this.loading = false;
-          alert('Film mis à jour avec succès');
-          this.router.navigate(['/film/list']);
-        },
-        (error) => {
-          this.loading = false;
-          this.errorMessage = 'Erreur lors de la mise à jour du film';
-          console.error(error);
-        }
-      );
+      // Determine whether to add or update
+      if (this.isUpdateMode && this.film.id) {
+        formData.append('id', this.film.id);
+        this.filmService.updateFilm(this.film.id, formData).subscribe({
+          next: (response) => {
+            console.log('Success:', response);
+            this.isLoading = false;
+            alert('Film mis à jour avec succès!');
+            this.router.navigate(['/film/list']);
+          },
+          error: (error) => {
+            console.error('Error details:', error);
+            this.isLoading = false;
+            this.errorMessage = "Erreur lors de la mise à jour du film.";
+          }
+        });
+      } else {
+        // Existing add film logic
+        this.filmService.addFilm(formData).subscribe({
+          next: (response) => {
+            console.log('Success:', response);
+            this.isLoading = false;
+            alert('Film ajouté avec succès!');
+            this.router.navigate(['/film/list']);
+          },
+          error: (error) => {
+            console.error('Error details:', error);
+            this.isLoading = false;
+            this.errorMessage = "Erreur lors de l'ajout du film.";
+          }
+        });
+      }
+    } else {
+      this.errorMessage = "Veuillez remplir tous les champs requis.";
     }
   }
 }
