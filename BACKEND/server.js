@@ -9,6 +9,7 @@ const AbonnRouter=require ('./routes/api/abonnements')
 const CategorieRouter = require('./routes/api/categories')
 const PayementRouter=require('./routes/api/payaments')
 const path = require("path");
+const Payment = require("./models/Payement");
 const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
@@ -33,5 +34,74 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 app.use('/api/categorie', CategorieRouter);
 app.use('/api/abonnement', AbonnRouter);
 app.use('/api/payment' , PayementRouter);
+
+// async function findPayments() {
+//     try {
+//         const findResult = await Payment.find({
+//             utilisateurId: "aaa"
+//         });
+//
+//         for (const doc of findResult) {
+//             console.log(doc);
+//         }
+//     } catch (error) {
+//         console.error("Erreur lors de la recherche des paiements :", error);
+//     }
+// }
+
+// async function  findPayments() {
+//     try {
+//         const findResult = await Payment.find({
+//             utilisateurId: "aaa"
+//         });
+//
+//         for (const doc of findResult) {
+//             console.log(doc)
+//             dateNow = new Date() ;
+//             if( doc.dateExpirationAbon < dateNow ){
+//                 continue;
+//             }
+//             else{
+//                 bool=true ;
+//
+//                 break ;
+//             }
+//
+//
+//
+//         }
+//         console.log(bool);
+//     } catch (error) {
+//         console.error("Erreur lors de la recherche des paiements :", error);
+//     }
+// }
+
+async function findPayments() {
+    try {
+        const findResult = await Payment.find({
+            utilisateurId: "aaa"
+        });
+
+        for (const doc of findResult) {
+            const dateNow = new Date();
+            if (doc.dateExpirationAbon >= dateNow) {
+                return true; // Active subscription found
+            }
+        }
+
+        return false; // No active subscription found
+    } catch (error) {
+        console.error("Erreur lors de la recherche des paiements :", error);
+        return false; // Return false in case of error
+    }
+}
+
+// Appelez la fonction // true or false
+async function checkSubscription() {
+    const hasActiveSubscription = await findPayments();
+    console.log(hasActiveSubscription);
+}
+
+checkSubscription()
 
 app.listen(port ,  () => console.log(`Server running on port ${port}`));

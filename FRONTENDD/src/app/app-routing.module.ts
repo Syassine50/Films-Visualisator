@@ -27,7 +27,7 @@ const routes: Routes = [
   {path: 'listusers', component: ListusersComponent,canActivate:[authGuard]},
   {path: 'users/update-user/:id', component: UpdateUserComponent,},
   {path: '', component: FilmslistComponent,},
-  {path: 'film/add', component: AddfilmComponent,},
+  {path: 'film/add', component: AddfilmComponent, canActivate:[authGuard]},
 
   //{path: '', component: HomeComponent ,canActivate:[authGuard]} , // Use HomeComponent instead of AppComponent
 
@@ -38,9 +38,8 @@ const routes: Routes = [
   {path: 'Abonnement/ListAbonnement' , component:ShowAbonnementsComponent},
   {path: 'Abonnement/Add' , component:AddAbonnComponent , canActivate:[authGuard]},
   {path: 'Abonnement/update/:id' , component:UpdateAbnnComponent , canActivate:[authGuard]},
-  {path: 'Paiement/add/:id/:duree' , component:PaiementComponent }
-
-
+  {path: 'Paiement/add/:id/:duree' , component:PaiementComponent , canActivate:[authGuard]},
+  { path: 'film/edit/:id', component: AddfilmComponent }
 ];
 
 

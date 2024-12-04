@@ -35,15 +35,48 @@ router.get("/all", async (req, res) => {
         res.status(500).send({status: "error", msg: "Internal server error"});
     }
 });
-
 // Read one
 router.get("/:id", async (req, res) => {
     try {
-        const payment = await Payment.findById(req.params.id);
+        async function findPayments() {
+            try {
+                const findResult = await Payment.find({
+                    utilisateurId: req.params.id
+                });
+
+                for (const doc of findResult) {
+                    const dateNow = new Date();
+                    if (doc.dateExpirationAbon >= dateNow) {
+                        return true; // Active subscription found
+                    }
+                }
+
+                return false; // No active subscription found
+            } catch (error) {
+                console.error("Erreur lors de la recherche des paiements :", error);
+                return false; // Return false in case of error
+            }
+        }
+
+        const hasActiveSubscription = await findPayments();
+        console.log(hasActiveSubscription);
+        const payment = await Payment.find({
+            utilisateurId: req.params.id
+        });
+        const result ={
+            hasActiveSubscription,
+            payment
+        }
+
+
+
         if (!payment) {
             return res.status(404).send({status: "notok", msg: "Payment not found"});
         }
-        res.status(200).json(payment);
+        if(hasActiveSubscription){
+            res.status(200).json(result);
+
+        }
     } catch (err) {
         res.status(500).send({status: "error", msg: "Internal server error"});
     }

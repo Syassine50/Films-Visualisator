@@ -1,6 +1,7 @@
 <div class="container">
   <h2>Ajouter un nouvel abonnement</h2>
 
+
   <form #abonnForm="ngForm" (ngSubmit)="add(abonnForm)">
     <div class="form-group">
       <label for="nomDePropDeCarte">Nom de propriétaire :</label>
@@ -48,3 +49,6 @@
     </button>
   </form>
 </div>
+
+<!--<label>Active Subscription: {{ subscriptionResult.hasActiveSubscription }}</label>-->
+

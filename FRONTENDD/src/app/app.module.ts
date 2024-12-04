@@ -28,6 +28,7 @@ import { AddAbonnComponent } from './AbonnementMangaement/add-abonn/add-abonn.co
 import { UpdateAbnnComponent } from './AbonnementMangaement/update-abnn/update-abnn.component';
 import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnements/show-abonnements.component';
 import { PaiementComponent } from './PaiementComponents/paiement/paiement.component';
+import { UpdatefilmComponent } from './updatefilm/updatefilm.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { PaiementComponent } from './PaiementComponents/paiement/paiement.compon
     AddAbonnComponent,
     UpdateAbnnComponent,
     ShowAbonnementsComponent,
-    PaiementComponent
+    PaiementComponent,
+    UpdatefilmComponent
   ],
   imports: [
     BrowserModule,

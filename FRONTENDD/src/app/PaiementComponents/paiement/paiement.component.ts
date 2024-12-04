@@ -23,6 +23,7 @@ export class PaiementComponent implements
   }
 
 
+
   paiementForm: FormGroup;
   loading: boolean = false;
   errorMessage: string = '';
@@ -47,10 +48,27 @@ export class PaiementComponent implements
       role: ['', [Validators.required]]
     });
   }
-
+  subscriptionResult: { hasActiveSubscription: boolean, payment: any } | null = null;
+  paym: any[] = [];
   AbonnId : string = '';
   duree : any ;
+  // paym: any;
+  // subscriptionResult :any ;
   ngOnInit(): void {
+    // this.paiementserv.fetchpaiement();
+    // this.subscriptionResult= PaiementService.subscriptionResult ;
+    // console.log(PaiementService.subscriptionResult)
+    // console.log(this.subscriptionResult)
+    // this.paym = PaiementService.paiement;
+    // console.log( PaiementService.paiement);
+    // console.log("this.paym");
+
+    this.paiementserv.fetchpaiement().subscribe(
+      result => {
+        this.subscriptionResult = result;
+        console.log('Subscription Result:', this.subscriptionResult);
+      }
+    );
 // Récupérer l'ID de l'utilisateur depuis l'URL
 //     this.userId =
 //       this.route.snapshot.paramMap.get('id') || '';

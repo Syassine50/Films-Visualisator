@@ -1,26 +1,57 @@
+<div class="container1">
+  <div class="carousel">
+    <div class="carousel-item" *ngFor="let cat of categories">
+      <button
+        class="btn btn-secondary"
+        [class.active]="activeCategory === cat.name"
+        (click)="fetchFilmsbycategorie(cat.name)">
+        {{ cat.name }}
+      </button>
+    </div>
+  </div>
+</div>
+<style>
+
+</style>
 <div class="container">
   <div *ngIf="films.length > 0; else noFilms">
     <div class="row">
       <div *ngFor="let film of films" class="col-md-4 mb-4">
-        <div class="card">
-          <img [src]="'http://localhost:3001/' + film.photoAffiche"
-               class="card-img-top"
-               style="height: 300px; object-fit: cover;"
-               [alt]="film.nom">
-
-          <div class="card-body">
-            <h5 class="card-title">{{film.nom}}</h5>
-            <p class="card-text">{{film.description}}</p>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-primary" (click)="playVideo(film.trailer)">
-                Watch Trailer
-              </button>
-              <button class="btn btn-success" (click)="playVideo(film.film)">
-                Watch Film
-              </button>
+          <div class="card">
+            <a (click)="playVideo(film.trailer)">
+              <img [src]="'http://localhost:3001/' + film.photoAffiche"
+                 class="card-img-top"
+                 style="height: 300px; object-fit: cover;"
+                 [alt]="film.nom">
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">{{film.nom}}</h5>
+              <p class="card-text">{{film.description}}</p>
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-primary" (click)="playVideo(film.trailer)">
+                  Watch Trailer
+                </button>
+                <button class="btn btn-success" *ngIf="isSubscribed() || isAdmin()" (click)="playVideo(film.film)">
+                  Watch Film
+                </button>
+                <button class="btn btn-success" *ngIf="!(isSubscribed() || isAdmin())" [routerLink]="!(isLoggedIn$ | async) ? '/login-user' : '/Abonnement/ListAbonnement/'">
+                  Subscribe to Watch Film
+                </button>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-primary" [routerLink] ="['/film/edit', film._id]">
+                  Edit
+                </button>
+                <button class="btn btn-success" *ngIf="isSubscribed() || isAdmin()" (click)="playVideo(film.film)">
+                  Watch Film
+                </button>
+                <button class="btn btn-success" *ngIf="!(isSubscribed() || isAdmin())" [routerLink]="!(isLoggedIn$ | async) ? '/login-user' : '/Abonnement/ListAbonnement/'">
+                  Subscribe to Watch Film
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+
       </div>
     </div>
   </div>
