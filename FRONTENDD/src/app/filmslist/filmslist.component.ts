@@ -98,40 +98,6 @@ export class FilmslistComponent implements OnInit {
       }
     });
   }
-  // fetchFilmsbycategorie(categorie :any): void {
-  //
-  //   if (categorie == "" || this.categorie==categorie){
-  //     this.categorie= "";
-  //     this.clicked=false ;
-  //     this.filmService.getFilms().subscribe({
-  //       next: (data) => {
-  //         console.log('Received films data:', data);
-  //         this.films = data;
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching films:', error);
-  //         alert('Error loading films: ' + error.message);
-  //       }
-  //     });
-  //   }
-  //   else{
-  //     this.categorie= categorie;
-  //
-  //     this.clicked=true;
-  //       this.filmService.getfilmBycat(categorie).subscribe(
-  //         (data) => {
-  //           console.log('Received films data:', data);
-  //           this.films = data;
-  //         },
-  //         (error) => {
-  //           console.error('Error fetching films:', error);
-  //           alert('Error loading films: ' + error.message);
-  //         }
-  //       );
-  //   }
-  //   console.log(this.categorie);
-  // }
-
     fetchFilmsbycategorie(categorie: string): void {
       // If clicking the same category again, reset
       if (this.activeCategory === categorie) {
@@ -202,8 +168,15 @@ export class FilmslistComponent implements OnInit {
   isAdmin():boolean {
     return this.authService.isAdmin();
   }
-  ngOnDestroy(): void {
-    document.body.classList.remove('netflix-modal');
+  onDeleteFilm(FilmId: string): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce film ?')) {
+      this.filmService.deleteFilm(FilmId).subscribe(() => {
+        this.fetchFilms(); // Mettre à jour la liste après la suppression
+      }, error => {
+        console.error('Erreur lors de la suppression de l\'film', error);
+        alert('Une erreur est survenue lors de la suppression.');
+      });
+    }
   }
 
   protected readonly console = console;

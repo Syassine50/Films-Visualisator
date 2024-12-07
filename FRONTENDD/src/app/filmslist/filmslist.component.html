@@ -61,7 +61,7 @@
           </div>
           <div class="admin-buttons" *ngIf="isAdmin()">
             <button class="btn btn-primary" [routerLink]="['/film/edit', film._id]">Edit</button>
-            <button class="btn btn-danger" >Delete</button>
+            <button class="btn btn-danger" (click)="onDeleteFilm(film._id)">Delete</button>
           </div>
         </div>
       </div>

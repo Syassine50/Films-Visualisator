@@ -28,6 +28,7 @@ export class AddfilmComponent {
 
   ngOnInit(): void {
      this.getCategories();
+     console.log(this.categories);
   }
    // Convertit le tableau en chaîne séparée par des virgules
 

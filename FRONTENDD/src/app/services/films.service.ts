@@ -32,6 +32,10 @@ export class FilmsService {
     return this.http.put<any>(`${this.apiUrlFilm}/update/${id}`, formData);
   }
 
+  deleteFilm(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrlFilm}/delete/${id}`);
+  }
+
   getFilmById(id: string) {
     return this.http.get<any>(`${this.apiUrlFilm}/${id}`);
   }
