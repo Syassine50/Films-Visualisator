@@ -12,16 +12,19 @@ router.post('/ajouter', upload.fields([
     { name: 'film', maxCount: 1 }
 ]), async (req, res) => {
     try {
-        const { nom, description, dateDeSortie, categorie } = req.body;
+        let { nom, description, dateDeSortie, categorie } = req.body;
 
         // Vérifier que toutes les catégories existent
-        if (categorie && categorie.length > 0) {
-            const categorieExistantes = await Categorie.find({ name: { $in: categorie } });
-            if (categorieExistantes.length !== categorie.length) {
-                return res.status(400).json({
-                    message: 'Une ou plusieurs catégories spécifiées n\'existent pas'
-                });
-            }
+        // if (categorie && categorie.length > 0) {
+        //     const categorieExistantes = await Categorie.find({ name: { $in: categorie } });
+        //     if (categorieExistantes.length !== categorie.length) {
+        //         return res.status(400).json({
+        //             message: 'Une ou plusieurs catégories spécifiées n\'existent pas'
+        //         });
+        //     }
+        // }
+        if (typeof categorie === 'string') {
+            categorie= JSON.parse(categorie);
         }
 
         const trailer = req.files['trailer'][0].path;

@@ -22,6 +22,20 @@
     </div>
 
     <div class="form-group">
+      <label for="categories">Catégories</label>
+      <p-multiSelect
+        id="categories"
+        name="categories"
+        [(ngModel)]="film.categories"
+        [options]="category"
+        optionLabel="name"
+        placeholder="Sélectionnez les catégories"
+        [style]="{ width: '100%' }"
+        class="form-control">
+      </p-multiSelect>
+    </div>
+
+    <div class="form-group">
       <label for="dateDeSortie">Date de sortie</label>
       <input type="date"
              id="dateDeSortie"
@@ -32,7 +46,7 @@
     </div>
 
     <div class="form-group">
-      <label for="trailer">Trailer</label>
+      <label for="trailer">Bande-annonce</label>
       <input type="file"
              id="trailer"
              name="trailer"
@@ -43,7 +57,7 @@
     </div>
 
     <div class="form-group">
-      <label for="photoAffiche">Photo d'affiche</label>
+      <label for="photoAffiche">Affiche</label>
       <input type="file"
              id="photoAffiche"
              name="photoAffiche"
@@ -54,7 +68,7 @@
     </div>
 
     <div class="form-group">
-      <label for="film">Film</label>
+      <label for="film">Fichier film</label>
       <input type="file"
              id="film"
              name="film"
@@ -63,6 +77,10 @@
              class="form-control"
              accept="video/*">
     </div>
+
+<!--    <p *ngIf="film.categories.length > 0">-->
+<!--      Catégories sélectionnées : {{ film.categories.map(c => c).join(', ') }}-->
+<!--    </p>-->
 
     <div class="error-message" *ngIf="errorMessage">
       {{ errorMessage }}

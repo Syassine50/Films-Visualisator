@@ -22,9 +22,6 @@
           <li class="nav-item" >
             <a class="nav-link" routerLink="/Abonnement/ListAbonnement">S'abonner</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/contact">Contact</a>
-          </li>
 
           <!-- Boutons de connexion/inscription si non connecté -->
           <ng-container *ngIf="!(isLoggedIn$ | async)">

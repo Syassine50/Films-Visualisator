@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FilmsService } from '../services/films.service';
 import {PaiementService} from '../services/paiement.service';
 import {AuthentificationService} from '../services/authentification.service';
-import {Observable} from 'rxjs';
+import {map, Observable, of} from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import {catchError} from 'rxjs/operators';
 
 
 @Component({
@@ -16,8 +17,12 @@ export class FilmslistComponent implements OnInit {
   films: any[] = [];
   categories: any[] = [];
   isModalOpen = false;
+  private subscriptionResult: { hasActiveSubscription: boolean, payment: any } | null = null;
+
   currentVideo: string = '';
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  // Close Modal Function
+
   categorie :string ='';
   clicked =false;
   activeCategory = '';
@@ -29,17 +34,58 @@ export class FilmslistComponent implements OnInit {
     private paiementService : PaiementService,
     private authService : AuthentificationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
     this.fullname$ = this.authService.fullname$;
   }
 
   ngOnInit(): void {
+
     this.fetchFilmsbycategorie(this.categorie);
     this.getCategories();
     console.log(this.categories);
+    this.paiementService.fetchpaiement().subscribe(
+      result => {
+        this.subscriptionResult = result;
+        console.log('Subscription Result:', this.subscriptionResult);
+      }
+    );
+    this.getSubscriptionResult();
+    this.isSubscribed();
   }
+
+  closeModal() {
+    this.isModalOpen = false;
+    console.log('Modal status:', this.isModalOpen);
+
+    // Force change detection
+    this.cdr.detectChanges();
+
+    if (this.videoPlayer && this.videoPlayer.nativeElement) {
+      this.videoPlayer.nativeElement.pause();
+    }
+  }
+
+
+  fetchpaiement(): Observable<{ hasActiveSubscription: boolean, payment: any }> {
+    return this.paiementService.getPaiementById().pipe(
+      map(result => {
+        this.subscriptionResult = result;
+        return result;
+      }),
+      catchError(error => {
+        console.error('Erreur lors de la récupération des abonnements', error);
+        this.subscriptionResult = {
+          hasActiveSubscription: false,
+          payment: null
+        };
+        return of(this.subscriptionResult);
+      })
+    );
+  }
+
   fetchFilms(): void {
     this.filmService.getFilms().subscribe({
       next: (data) => {
@@ -117,8 +163,12 @@ export class FilmslistComponent implements OnInit {
 
   isSubscribed(): boolean{
 
-    return <boolean>this.paiementService.getSubscriptionResult();
+    return <boolean>this.getSubscriptionResult();
   }
+  getSubscriptionResult() {
+    return this.subscriptionResult?.hasActiveSubscription;
+  }
+
   playVideo(videoPath: string): void {
     console.log('Playing video:', videoPath); // Debug log
     this.currentVideo = videoPath;
@@ -136,14 +186,7 @@ export class FilmslistComponent implements OnInit {
     }, 100);
   }
 
-  closeModal(): void {
-    this.isModalOpen = false;
-    document.body.classList.remove('modal-open');
-    if (this.videoPlayer) {
-      this.videoPlayer.nativeElement.pause();
-      this.videoPlayer.nativeElement.currentTime = 0;
-    }
-  }
+  // Close Modal Function
 
   getCategories(){
     this.filmService.getCategories().subscribe(
@@ -160,7 +203,7 @@ export class FilmslistComponent implements OnInit {
     return this.authService.isAdmin();
   }
   ngOnDestroy(): void {
-    document.body.classList.remove('modal-open');
+    document.body.classList.remove('netflix-modal');
   }
 
   protected readonly console = console;

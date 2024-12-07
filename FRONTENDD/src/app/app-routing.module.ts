@@ -20,6 +20,7 @@ import {ShowAbonnementsComponent} from './AbonnementMangaement/show-abonnements/
 import {AddAbonnComponent} from './AbonnementMangaement/add-abonn/add-abonn.component';
 import {UpdateAbnnComponent} from './AbonnementMangaement/update-abnn/update-abnn.component';
 import {PaiementComponent} from './PaiementComponents/paiement/paiement.component';
+import {UpdatefilmComponent} from './updatefilm/updatefilm.component';
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
@@ -39,7 +40,7 @@ const routes: Routes = [
   {path: 'Abonnement/Add' , component:AddAbonnComponent , canActivate:[authGuard]},
   {path: 'Abonnement/update/:id' , component:UpdateAbnnComponent , canActivate:[authGuard]},
   {path: 'Paiement/add/:id/:duree' , component:PaiementComponent , canActivate:[authGuard]},
-  { path: 'film/edit/:id', component: AddfilmComponent }
+  { path: 'film/edit/:id', component: UpdatefilmComponent }
 ];
 
 

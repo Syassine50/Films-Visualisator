@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Modifier un film</h2>
 
-  <form [formGroup]="updateFilmForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="filmForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="nom">Nom du film</label>
       <input type="text"
@@ -23,7 +23,7 @@
 
     <div class="form-group">
       <label for="dateDeSortie">Date de sortie</label>
-      <input type="date"
+      <input
              id="dateDeSortie"
              name="dateDeSortie"
              formControlName="dateDeSortie"
@@ -37,7 +37,17 @@
              id="trailer"
              name="trailer"
              (change)="onFileChange($event, 'trailer')"
-             class="form-control-file">
+             class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="categorie">Catégories (séparées par des virgules)</label>
+      <textarea id="categorie"
+                name="categorie"
+                [(ngModel)]="film.categorie"
+                class="form-control"
+                placeholder="Action, Comédie, Drame"></textarea>
+      <small class="form-text text-muted">Entrez les catégories séparées par des virgules</small>
     </div>
 
     <div class="form-group">
@@ -46,7 +56,7 @@
              id="photoAffiche"
              name="photoAffiche"
              (change)="onFileChange($event, 'photoAffiche')"
-             class="form-control-file">
+             class="form-control">
     </div>
 
     <div class="form-group">
@@ -55,7 +65,7 @@
              id="film"
              name="film"
              (change)="onFileChange($event, 'film')"
-             class="form-control-file">
+             class="form-control">
     </div>
 
     <div class="error-message" *ngIf="errorMessage">
@@ -63,7 +73,7 @@
     </div>
 
     <button type="submit"
-            [disabled]="!updateFilmForm.valid"
+            [disabled]="!filmForm.valid"
             class="btn btn-primary m-2">
       Modifier le film
     </button>

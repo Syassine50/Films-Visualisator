@@ -1,86 +1,97 @@
-<div class="container1">
-  <div class="carousel">
-    <div class="carousel-item" *ngFor="let cat of categories">
-      <button
-        class="btn btn-secondary"
-        [class.active]="activeCategory === cat.name"
-        (click)="fetchFilmsbycategorie(cat.name)">
-        {{ cat.name }}
+<div class="container1 d-flex justify-content-end">
+  <div class="dropdown">
+    <button
+        class="btn btn-light border-dark border-opacity-50 mb-2  dropdown-toggle"
+        type="button"
+        id="categoryDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        {{ activeCategory || 'Select Category' }}
       </button>
+      <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+        <li *ngFor="let cat of categories">
+          <a
+            class="dropdown-item"
+            href="javascript:void(0)"
+            [class.active]="activeCategory === cat.name"
+            (click)="fetchFilmsbycategorie(cat.name)">
+            {{ cat.name }}
+          </a>
+        </li>
+      </ul>
+
+
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div *ngIf="films.length > 0; else noFilms">
+    <div class="film-row">
+      <div *ngFor="let film of films" class="film-card">
+        <!-- Movie Poster -->
+        <div class="film-image">
+          <a (click)="playVideo(film.trailer)">
+            <img [src]="'http://localhost:3001/' + film.photoAffiche" [alt]="film.nom" />
+          </a>
+        </div>
+
+        <!-- Movie Overlay Info -->
+        <div class="film-overlay">
+          <h4 class="film-title">{{ film.nom }}</h4>
+          <p class="film-description">{{ film.description }}</p>
+          <p class="film-description">{{ film.dateDeSortie }}</p>
+
+          <div class="film-buttons">
+            <button class="btn btn-primary" (click)="playVideo(film.trailer)">Watch Trailer</button>
+            <button
+              class="btn btn-success"
+              *ngIf="isSubscribed() || isAdmin()"
+              (click)="playVideo(film.film)"
+            >
+              Watch Film
+            </button>
+            <button
+              class="btn btn-success"
+              *ngIf="!(isSubscribed() || isAdmin())"
+              [routerLink]="!(isLoggedIn$ | async) ? '/login-user' : '/Abonnement/ListAbonnement/'"
+            >
+              Subscribe to Watch Film
+            </button>
+          </div>
+          <div class="admin-buttons" *ngIf="isAdmin()">
+            <button class="btn btn-primary" [routerLink]="['/film/edit', film._id]">Edit</button>
+            <button class="btn btn-danger" >Delete</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<style>
 
-</style>
-<div class="container">
-  <div *ngIf="films.length > 0; else noFilms">
-    <div class="row">
-      <div *ngFor="let film of films" class="col-md-4 mb-4">
-          <div class="card">
-            <a (click)="playVideo(film.trailer)">
-              <img [src]="'http://localhost:3001/' + film.photoAffiche"
-                 class="card-img-top"
-                 style="height: 300px; object-fit: cover;"
-                 [alt]="film.nom">
-            </a>
-            <div class="card-body">
-              <h5 class="card-title">{{film.nom}}</h5>
-              <p class="card-text">{{film.description}}</p>
-              <div class="d-flex justify-content-between">
-                <button class="btn btn-primary" (click)="playVideo(film.trailer)">
-                  Watch Trailer
-                </button>
-                <button class="btn btn-success" *ngIf="isSubscribed() || isAdmin()" (click)="playVideo(film.film)">
-                  Watch Film
-                </button>
-                <button class="btn btn-success" *ngIf="!(isSubscribed() || isAdmin())" [routerLink]="!(isLoggedIn$ | async) ? '/login-user' : '/Abonnement/ListAbonnement/'">
-                  Subscribe to Watch Film
-                </button>
-              </div>
-              <div class="d-flex justify-content-between">
-                <button class="btn btn-primary" [routerLink] ="['/film/edit', film._id]">
-                  Edit
-                </button>
-                <button class="btn btn-success" *ngIf="isSubscribed() || isAdmin()" (click)="playVideo(film.film)">
-                  Watch Film
-                </button>
-                <button class="btn btn-success" *ngIf="!(isSubscribed() || isAdmin())" [routerLink]="!(isLoggedIn$ | async) ? '/login-user' : '/Abonnement/ListAbonnement/'">
-                  Subscribe to Watch Film
-                </button>
-              </div>
-            </div>
-          </div>
-
-      </div>
+<!-- Netflix-like Video Modal -->
+<div class="netflix-modal" [ngClass]="{'open': isModalOpen}">
+  <div class="modal-dialog">
+    <!-- Video Content -->
+    <div class="video-container">
+      <video #videoPlayer class="video-player" controls autoplay>
+        <source [src]="getVideoUrl(currentVideo)" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
   </div>
 
-  <!-- Video Modal -->
-  <div class="modal fade" id="videoModal" tabindex="-1" [ngClass]="{'show': isModalOpen}"
-       [style.display]="isModalOpen ? 'block' : 'none'">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Video Player</h5>
-          <button type="button" class="btn-close" (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body">
-          <video #videoPlayer class="w-100" controls autoplay>
-            <source [src]="getVideoUrl(currentVideo)" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Close Button (Positioned Outside) -->
+  <button class="close-button" *ngIf="isModalOpen" (click)="closeModal()">×</button>
+</div>
 
-  <!-- Modal Backdrop -->
-  <div class="modal-backdrop fade show" *ngIf="isModalOpen" (click)="closeModal()"></div>
+
+<!-- Transparent Backdrop -->
+<div class="modal-backdrop" *ngIf="isModalOpen" (click)="closeModal()"></div>
+
 
   <ng-template #noFilms>
     <div class="alert alert-warning text-center" role="alert">
       No films found.
     </div>
   </ng-template>
-</div>

@@ -29,6 +29,7 @@ import { UpdateAbnnComponent } from './AbonnementMangaement/update-abnn/update-a
 import { ShowAbonnementsComponent } from './AbonnementMangaement/show-abonnements/show-abonnements.component';
 import { PaiementComponent } from './PaiementComponents/paiement/paiement.component';
 import { UpdatefilmComponent } from './updatefilm/updatefilm.component';
+import {MultiSelectModule} from "primeng/multiselect";
 
 
 @NgModule({
@@ -58,16 +59,17 @@ import { UpdatefilmComponent } from './updatefilm/updatefilm.component';
     PaiementComponent,
     UpdatefilmComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatTabsModule,
-    NgbModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatTabsModule,
+        NgbModule,
+        MultiSelectModule
+    ],
   providers: [
 
     provideHttpClient(withFetch()),

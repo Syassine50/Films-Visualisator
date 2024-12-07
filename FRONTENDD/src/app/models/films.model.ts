@@ -6,4 +6,5 @@ export interface Films {
   trailer : string ;
   photoAffiche: string ;
   film  : string ;
+  categorie : string[] ;
 }
