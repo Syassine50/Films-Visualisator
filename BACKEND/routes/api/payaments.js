@@ -5,7 +5,7 @@ const Payment = require("../../models/Payement");
 router.post("/add", (req, res) => {
     const {utilisateurId, abonnementId, numeroCarte, cvv, nomDePropDeCarte , months} = req.body;
 
-    if (!utilisateurId || !abonnementId || !numeroCarte || !cvv || !nomDePropDeCarte) {
+    if (!utilisateurId || !abonnementId || !numeroCarte || !cvv || !nomDePropDeCarte || !months) {
         return res.status(400).send({status: "notok", msg: "Please enter all required data"});
     }
 

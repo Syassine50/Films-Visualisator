@@ -14,18 +14,14 @@ export class PaiementComponent implements
   OnInit {
 
   paiement:any ={
-    // utilisateurId : '',
-    // abonnementId :'',
     cvv : '',
     numeroCarte : '',
     nomDePropDeCarte : '',
-    // dateExpirationAbon : '',
   }
 
 
 
   paiementForm: FormGroup;
-  loading: boolean = false;
   errorMessage: string = '';
   constructor(
     private route: ActivatedRoute,
@@ -43,55 +39,18 @@ export class PaiementComponent implements
       numeroCarte: ['', [Validators.required]],
       cvv: ['', [Validators.required]],
       nomDePropDeCarte: ['', [Validators.required]],
-      email: ['', [Validators.required,
-        Validators.email]],
-      role: ['', [Validators.required]]
     });
   }
   subscriptionResult: { hasActiveSubscription: boolean, payment: any } | null = null;
-  paym: any[] = [];
-  AbonnId : string = '';
+
   duree : any ;
-  // paym: any;
-  // subscriptionResult :any ;
   ngOnInit(): void {
-    // this.paiementserv.fetchpaiement();
-    // this.subscriptionResult= PaiementService.subscriptionResult ;
-    // console.log(PaiementService.subscriptionResult)
-    // console.log(this.subscriptionResult)
-    // this.paym = PaiementService.paiement;
-    // console.log( PaiementService.paiement);
-    // console.log("this.paym");
 
     this.paiementserv.fetchpaiement().subscribe(
       result => {
         this.subscriptionResult = result;
-        console.log('Subscription Result:', this.subscriptionResult);
       }
     );
-// Récupérer l'ID de l'utilisateur depuis l'URL
-//     this.userId =
-//       this.route.snapshot.paramMap.get('id') || '';
-// // Charger les détails de l'utilisateur pour pré-remplir le formulaire
-//     if (this.userId) {
-//       this.userService.getUserById(this.userId).subscribe(
-//         (user) => {
-// // Pré-remplir le formulaire avec les données utilisateur
-//           this.paiementForm.patchValue({
-//             lastname:user.lastname,
-//             email: user.email,
-//             password: user.password,
-//             firstname: user.firstname,
-//             phone:user.phone,
-//             role:user.role
-//           });
-//         },
-//         (error) => {
-//           console.error('Erreur lors de la récupération des informations utilisateur',
-//             error);
-//         }
-//       );
-//     }
   }
   add(form : any){
     if(form.valid){
@@ -100,17 +59,15 @@ export class PaiementComponent implements
         abonnementId : this.route.snapshot.paramMap.get('id'),
         cvv : this.paiement.cvv,
         nomDePropDeCarte : this.paiement.nomDePropDeCarte,
-        months : this.route.snapshot.paramMap.get('duree'),
+        months : parseInt(<any> this.route.snapshot.paramMap.get('duree')),
         numeroCarte : this.paiement.numeroCarte,
       }
       this.paiementserv.addPaiement(abonn).subscribe(
         (response) => {
-          console.log("Success:" , response);
           this.router.navigate(['/']);
         },
         (error)=>{
           console.error("error details :" , error);
-
         }
       );
 

@@ -1,4 +1,15 @@
 <div class="container1 d-flex justify-content-end">
+  <div class="search-bar-container">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search for a movie..."
+      [(ngModel)]="searchQuery"
+      (input)="filterFilms()"
+    />
+  </div>
+
+
   <div class="dropdown">
     <button
         class="btn btn-light border-dark border-opacity-50 mb-2  dropdown-toggle"
@@ -23,6 +34,22 @@
 
   </div>
 </div>
+
+<!--<div class="carousel">-->
+<!--  <div *ngFor="let film of randomFilms" class="carousel-item">-->
+<!--    <div class="film-image">-->
+<!--      <a (click)="playVideo(film.trailer)">-->
+<!--        <img [src]="'http://localhost:3001/' + film.photoAffiche" [alt]="film.nom" />-->
+<!--      </a>-->
+<!--    </div>-->
+<!--    <h5 class="text-center">{{ film.nom }}</h5>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+
+
+
 
 
 <div class="container-fluid">

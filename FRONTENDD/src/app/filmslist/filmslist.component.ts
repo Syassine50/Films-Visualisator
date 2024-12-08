@@ -3,7 +3,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FilmsService } from '../services/films.service';
 import {PaiementService} from '../services/paiement.service';
 import {AuthentificationService} from '../services/authentification.service';
-import {map, Observable, of} from 'rxjs';
+import {map, Observable, of , BehaviorSubject } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import {catchError} from 'rxjs/operators';
 
@@ -22,12 +22,14 @@ export class FilmslistComponent implements OnInit {
   currentVideo: string = '';
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   // Close Modal Function
-
+  filteredFilms: any[] = []; // Liste filtrée pour la recherche
+  randomFilms: any[] = []; // Liste des 4 films aléatoires
+  searchQuery: string = '';
   categorie :string ='';
-  clicked =false;
   activeCategory = '';
   isLoggedIn$: Observable<boolean>;
   fullname$: Observable<string>;
+
   constructor(
     private filmService: FilmsService,
     private sanitizer: DomSanitizer ,
@@ -42,10 +44,10 @@ export class FilmslistComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.fetchFilms();
+    this.generateRandomFilms();
     this.fetchFilmsbycategorie(this.categorie);
     this.getCategories();
-    console.log(this.categories);
     this.paiementService.fetchpaiement().subscribe(
       result => {
         this.subscriptionResult = result;
@@ -69,22 +71,6 @@ export class FilmslistComponent implements OnInit {
   }
 
 
-  fetchpaiement(): Observable<{ hasActiveSubscription: boolean, payment: any }> {
-    return this.paiementService.getPaiementById().pipe(
-      map(result => {
-        this.subscriptionResult = result;
-        return result;
-      }),
-      catchError(error => {
-        console.error('Erreur lors de la récupération des abonnements', error);
-        this.subscriptionResult = {
-          hasActiveSubscription: false,
-          payment: null
-        };
-        return of(this.subscriptionResult);
-      })
-    );
-  }
 
   fetchFilms(): void {
     this.filmService.getFilms().subscribe({
@@ -97,14 +83,29 @@ export class FilmslistComponent implements OnInit {
         alert('Error loading films: ' + error.message);
       }
     });
+    this.filteredFilms = [...this.films]; // Initialise la liste filtrée
   }
-    fetchFilmsbycategorie(categorie: string): void {
+
+  filterFilms() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredFilms = this.films.filter(film =>
+      film.nom.toLowerCase().includes(query)
+    );
+  }
+
+  generateRandomFilms() {
+    if (this.films.length >= 4) {
+      const shuffled = [...this.films].sort(() => 0.5 - Math.random());
+      this.randomFilms = shuffled.slice(0, 4);
+    }
+  }
+
+  fetchFilmsbycategorie(categorie: string): void {
       // If clicking the same category again, reset
       if (this.activeCategory === categorie) {
       this.activeCategory = '';
       this.fetchFilms();
-      return;
-    }
+      return;}
 
     // Set active category
     this.activeCategory = categorie;
